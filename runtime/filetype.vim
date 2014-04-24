@@ -1,7 +1,7 @@
 " Vim support file to detect file types
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last Change:	2013 Sep 22
+" Last Change:	2014 Feb 26
 
 " Listen very carefully, I will say this only once
 if exists("did_load_filetypes")
@@ -105,6 +105,9 @@ au BufNewFile,BufRead *.run			setf ampl
 
 " Ant
 au BufNewFile,BufRead build.xml			setf ant
+
+" Arduino
+au BufNewFile,BufRead *.ino,*.pde		setf arduino
 
 " Apache style config file
 au BufNewFile,BufRead proftpd.conf*		call s:StarSetf('apachestyle')
@@ -536,6 +539,20 @@ au BufNewFile,BufRead *enlightenment/*.cfg	setf c
 " Eterm
 au BufNewFile,BufRead *Eterm/*.cfg		setf eterm
 
+" Euphoria 3 or 4
+au BufNewFile,BufRead *.eu,*.ew,*.ex,*.exu,*.exw  call s:EuphoriaCheck()
+if has("fname_case")
+   au BufNewFile,BufRead *.EU,*.EW,*.EX,*.EXU,*.EXW  call s:EuphoriaCheck()
+endif
+
+func! s:EuphoriaCheck()
+  if exists('g:filetype_euphoria')
+    exe 'setf ' . g:filetype_euphoria
+  else
+    setf euphoria3
+  endif
+endfunc
+
 " Lynx config files
 au BufNewFile,BufRead lynx.cfg			setf lynx
 
@@ -656,22 +673,26 @@ au BufNewFile,BufRead *.ed\(f\|if\|n\|o\)	setf edif
 " Embedix Component Description
 au BufNewFile,BufRead *.ecd			setf ecd
 
-" Eiffel or Specman
+" Eiffel or Specman or Euphoria
 au BufNewFile,BufRead *.e,*.E			call s:FTe()
 
 " Elinks configuration
 au BufNewFile,BufRead */etc/elinks.conf,*/.elinks/elinks.conf	setf elinks
 
 func! s:FTe()
-  let n = 1
-  while n < 100 && n < line("$")
-    if getline(n) =~ "^\\s*\\(<'\\|'>\\)\\s*$"
-      setf specman
-      return
-    endif
-    let n = n + 1
-  endwhile
-  setf eiffel
+  if exists('g:filetype_euphoria')
+    exe 'setf ' . g:filetype_euphoria
+  else
+    let n = 1
+    while n < 100 && n < line("$")
+      if getline(n) =~ "^\\s*\\(<'\\|'>\\)\\s*$"
+        setf specman
+        return
+      endif
+      let n = n + 1
+    endwhile
+    setf eiffel
+  endif
 endfunc
 
 " ERicsson LANGuage; Yaws is erlang too
@@ -1017,7 +1038,7 @@ au BufNewFile,BufRead *.ldif			setf ldif
 au BufNewFile,BufRead *.ld			setf ld
 
 " Lex
-au BufNewFile,BufRead *.lex,*.l			setf lex
+au BufNewFile,BufRead *.lex,*.l,*.lxx,*.l++	setf lex
 
 " Libao
 au BufNewFile,BufRead */etc/libao.conf,*/.libao	setf libao
@@ -1171,6 +1192,9 @@ au BufNewFile,BufRead *.mp			setf mp
 
 " MGL
 au BufNewFile,BufRead *.mgl			setf mgl
+
+" MIX - Knuth assembly
+au BufNewFile,BufRead *.mix,*.mixal		setf mix
 
 " MMIX or VMS makefile
 au BufNewFile,BufRead *.mms			call s:FTmms()
@@ -2061,14 +2085,15 @@ au BufNewFile,BufRead */etc/sudoers,sudoers.tmp	setf sudoers
 " SVG (Scalable Vector Graphics)
 au BufNewFile,BufRead *.svg			setf svg
 
-" If the file has an extension of 't' and is in a directory 't' then it is
-" almost certainly a Perl test file.
+" If the file has an extension of 't' and is in a directory 't' or 'xt' then
+" it is almost certainly a Perl test file.
 " If the first line starts with '#' and contains 'perl' it's probably a Perl
 " file.
 " (Slow test) If a file contains a 'use' statement then it is almost certainly
 " a Perl file.
 func! s:FTperl()
-  if expand("%:e") == 't' && expand("%:p:h:t") == 't'
+  let dirname = expand("%:p:h:t")
+  if expand("%:e") == 't' && (dirname == 't' || dirname == 'xt')
     setf perl
     return 1
   endif
@@ -2235,6 +2260,9 @@ au BufNewFile,BufRead *.v			setf verilog
 
 " Verilog-AMS HDL
 au BufNewFile,BufRead *.va,*.vams		setf verilogams
+
+" SystemVerilog
+au BufNewFile,BufRead *.sv,*.svh		setf systemverilog
 
 " VHDL
 au BufNewFile,BufRead *.hdl,*.vhd,*.vhdl,*.vbe,*.vst  setf vhdl
@@ -2408,7 +2436,7 @@ au BufNewFile,BufRead *.xsd			setf xsd
 au BufNewFile,BufRead *.xsl,*.xslt		setf xslt
 
 " Yacc
-au BufNewFile,BufRead *.yy			setf yacc
+au BufNewFile,BufRead *.yy,*.yxx,*.y++		setf yacc
 
 " Yacc or racc
 au BufNewFile,BufRead *.y			call s:FTy()

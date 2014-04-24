@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 7.4.  Last change: 2013 Aug 22
+*options.txt*	For Vim version 7.4.  Last change: 2014 Mar 23
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -992,7 +992,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 
 						*'backupdir'* *'bdir'*
 'backupdir' 'bdir'	string	(default for Amiga: ".,t:",
-				 for MS-DOS and Win32: ".,c:/tmp,c:/temp"
+				 for MS-DOS and Win32: ".,$TEMP,c:/tmp,c:/temp"
 				 for Unix: ".,~/tmp,~/")
 			global
 			{not in Vi}
@@ -2482,7 +2482,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 
 						*'directory'* *'dir'*
 'directory' 'dir'	string	(default for Amiga: ".,t:",
-				 for MS-DOS and Win32: ".,c:\tmp,c:\temp"
+				 for MS-DOS and Win32: ".,$TEMP,c:\tmp,c:\temp"
 				 for Unix: ".,~/tmp,/var/tmp,/tmp")
 			global
 	List of directory names for the swap file, separated with commas.
@@ -4731,7 +4731,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 
 						*'lispwords'* *'lw'*
 'lispwords' 'lw'	string	(default is very long)
-			global
+			global or local to buffer |global-local|
 			{not in Vi}
 			{not available when compiled without the |+lispindent|
 			feature}
@@ -4872,8 +4872,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 			global or local to buffer |global-local|
 			{not in Vi}
 	Program to use for the ":make" command.  See |:make_makeprg|.
-	This option may contain '%' and '#' characters, which are expanded to
-	the current and alternate file name. |:_%| |:_#|
+	This option may contain '%' and '#' characters (see  |:_%| and |:_#|), 
+	which are expanded to the current and alternate file name.  Use |::S| 
+	to escape file names in case they contain special characters.
 	Environment variables are expanded |:set_env|.  See |option-backslash|
 	about including spaces and backslashes.
 	Note that a '|' must be escaped twice: once for ":set" and once for
@@ -6670,6 +6671,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 	region by listing them: "en_us,en_ca" supports both US and Canadian
 	English, but not words specific for Australia, New Zealand or Great
 	Britain.
+	If the name "cjk" is included East Asian characters are excluded from
+	spell checking.  This is useful when editing text that also has Asian
+	words.
 							*E757*
 	As a special case the name of a .spl file can be given as-is.  The
 	first "_xx" in the name is removed and used as the region name
@@ -6993,6 +6997,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	immediately deleted.  When 'swapfile' is set, and 'updatecount' is
 	non-zero, a swap file is immediately created.
 	Also see |swap-file| and |'swapsync'|.
+	If you want to open a new buffer without creating a swap file for it,
+	use the |:noswapfile| modifier.
 
 	This option is used together with 'bufhidden' and 'buftype' to
 	specify special kinds of buffers.   See |special-buffers|.
@@ -7721,7 +7727,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 						*'undolevels'* *'ul'*
 'undolevels' 'ul'	number	(default 100, 1000 for Unix, VMS,
 						Win32 and OS/2)
-			global
+			global or local to buffer |global-local|
 			{not in Vi}
 	Maximum number of changes that can be undone.  Since undo information
 	is kept in memory, higher numbers will cause more memory to be used
@@ -7732,8 +7738,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 <	But you can also get Vi compatibility by including the 'u' flag in
 	'cpoptions', and still be able to use CTRL-R to repeat undo.
 	Also see |undo-two-ways|.
-	Set to a negative number for no undo at all: >
-		set ul=-1
+	Set to -1 for no undo at all.  You might want to do this only for the
+	current buffer: >
+		setlocal ul=-1
 <	This helps when you run out of memory for a single change.
 	Also see |clear-undo|.
 

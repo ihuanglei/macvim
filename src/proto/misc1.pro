@@ -69,6 +69,7 @@ char_u *gettail_sep __ARGS((char_u *fname));
 char_u *getnextcomp __ARGS((char_u *fname));
 char_u *get_past_head __ARGS((char_u *path));
 int vim_ispathsep __ARGS((int c));
+int vim_ispathsep_nocolon __ARGS((int c));
 int vim_ispathlistsep __ARGS((int c));
 void shorten_dir __ARGS((char_u *str));
 int dir_of_file_exists __ARGS((char_u *fname));
@@ -80,9 +81,10 @@ void add_pathsep __ARGS((char_u *p));
 char_u *FullName_save __ARGS((char_u *fname, int force));
 pos_T *find_start_comment __ARGS((int ind_maxcomment));
 void do_c_expr_indent __ARGS((void));
-int cin_islabel __ARGS((int ind_maxcomment));
+int cin_islabel __ARGS((void));
 int cin_iscase __ARGS((char_u *s, int strict));
 int cin_isscopedecl __ARGS((char_u *s));
+void parse_cino __ARGS((buf_T *buf));
 int get_c_indent __ARGS((void));
 int get_expr_indent __ARGS((void));
 int get_lisp_indent __ARGS((void));
@@ -98,7 +100,7 @@ int unix_expandpath __ARGS((garray_T *gap, char_u *path, int wildoff, int flags,
 void remove_duplicates __ARGS((garray_T *gap));
 int gen_expand_wildcards __ARGS((int num_pat, char_u **pat, int *num_file, char_u ***file, int flags));
 void addfile __ARGS((garray_T *gap, char_u *f, int flags));
-char_u *get_cmd_output __ARGS((char_u *cmd, char_u *infile, int flags));
+char_u *get_cmd_output __ARGS((char_u *cmd, char_u *infile, int flags, int *ret_len));
 void FreeWild __ARGS((int count, char_u **files));
 int goto_im __ARGS((void));
 /* vim: set ft=c : */

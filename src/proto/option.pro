@@ -23,6 +23,7 @@ char_u *check_colorcolumn __ARGS((win_T *wp));
 char_u *check_stl_option __ARGS((char_u *s));
 int get_option_value __ARGS((char_u *name, long *numval, char_u **stringval, int opt_flags));
 int get_option_value_strict __ARGS((char_u *name, long *numval, char_u **stringval, int opt_type, void *from));
+char_u *option_iter_next __ARGS((void **option, int opt_type));
 char_u *set_option_value __ARGS((char_u *name, long number, char_u *string, int opt_flags));
 char_u *get_term_code __ARGS((char_u *tname));
 char_u *get_highlight_default __ARGS((void));
@@ -59,7 +60,7 @@ int can_bs __ARGS((int what));
 void save_file_ff __ARGS((buf_T *buf));
 int file_ff_differs __ARGS((buf_T *buf, int ignore_empty));
 int check_ff_value __ARGS((char_u *p));
-long get_sw_value __ARGS((void));
+long get_sw_value __ARGS((buf_T *buf));
 long get_sts_value __ARGS((void));
 void find_mps_values __ARGS((int *initc, int *findc, int *backwards, int switchit));
 /* vim: set ft=c : */
